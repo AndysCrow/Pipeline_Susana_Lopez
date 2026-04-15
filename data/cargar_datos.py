@@ -2,8 +2,8 @@ import pandas as pd
 import os
 
 _df_cache = None
-ruta_archivo = "data/Base_Morbilidad_Enero_2025_75_Columnas.xlsb"
-ruta_cache = "data/cache.parquet"
+ruta_archivo = "Data/Base_Morbilidad_Enero_2025_75_Columnas.xlsb"
+ruta_cache = "Data/cache.parquet"
 
 
 
