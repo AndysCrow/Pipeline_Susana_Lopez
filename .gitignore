@@ -1,0 +1,75 @@
+# =========================
+# ENTORNOS VIRTUALES
+# =========================
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# CACHE Y BYTECODE
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# EXTENSIONES COMPILADAS
+# =========================
+*.so
+
+# =========================
+# DISTRIBUCIÓN / BUILD
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# INSTALACIÓN / DEPENDENCIAS
+# =========================
+pip-wheel-metadata/
+
+# =========================
+# LOGS Y ARCHIVOS TEMPORALES
+# =========================
+*.log
+*.tmp
+*.out
+
+# =========================
+# JUPYTER NOTEBOOKS
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# CONFIGURACIÓN DE IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# ARCHIVOS DE SISTEMA
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# VARIABLES DE ENTORNO
+# =========================
+.env
+.env.*
+
+# =========================
+# TESTING / COVERAGE
+# =========================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# =========================
+# MISC
+# =========================
+*.bak
+*.swp
