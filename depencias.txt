@@ -1,0 +1,5 @@
+1. pip install pandas 
+
+2. pip install pyarrow -> motor para .parquet pandas
+
+3. pip install pyxlsb -> motor para xlsb pandas
