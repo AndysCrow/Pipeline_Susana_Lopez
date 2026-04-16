@@ -3,3 +3,24 @@
 2. pip install pyarrow -> motor para .parquet pandas
 
 3. pip install pyxlsb -> motor para xlsb pandas
+
+Nombre esperado de las columnas
+
+CODIGO_FOLIO                            
+GENERO                                  
+REGIMEN                                 
+TIPO_PACIENTE                           
+MUNICIPIO                               
+ZONA                                    
+FECHA_INGRESO                           
+MES                                     
+AÑO                                     
+EDAD                                    
+NIVEL_SOCIOECONOMICO                    
+ETNIA                                   
+CODIGO_INGRESO                          
+TIPO_DIAGNOSTICO                        
+CIE10                                   
+NOMBRE_DIAGNOSTICO                      
+OCUPACION_PACIENTE
+
