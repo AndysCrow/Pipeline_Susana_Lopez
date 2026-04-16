@@ -39,7 +39,7 @@ columnas_clave = {
 }
 
 
-def depurar_columnas(df: pd.DataFrame, log: dtframe):
+def depurar_columnas(df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[ pd.DataFrame, dtframe.LogTrazabilidad]:
     columnas_originales = list(df.columns)
     columnas_validas = [col for col in columnas_originales if col in columnas_clave]
     columnas_eliminadas = [col for col in columnas_originales if col not in columnas_clave]
@@ -52,7 +52,7 @@ def depurar_columnas(df: pd.DataFrame, log: dtframe):
             valor_nuevo="ELIMINADO",
             regla_aplicada="Exclusión por no aportar al análisis epidemiológico",
             accion="Eliminación",
-            fase="Fase 1 - Depuración de columnas"
+            fase="Depuración de columnas"
         )
 
     df = df[columnas_validas].copy()
