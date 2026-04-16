@@ -43,7 +43,7 @@ pip-wheel-metadata/
 # =========================
 .ipynb_checkpoints/
 *.ipynb
-
+data/output/
 
 # =========================
 # CONFIGURACIÓN DE IDEs
