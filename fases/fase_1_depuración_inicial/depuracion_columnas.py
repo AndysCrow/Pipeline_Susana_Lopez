@@ -5,7 +5,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)
 sys.path.append(root_dir)
-import data.cargar_datos as data
+import Data.cargar_datos as data
 
 columnas_clave = {
     #Datos del paciente
@@ -13,6 +13,9 @@ columnas_clave = {
     "GENERO": "GENERO",
     "ETNÍA": "ETNIA",
     "NIVEL_SOCIOECONOMICO": "NIVEL_SOCIOECONOMICO",
+    "OCUPACION_PACIENTE": "OCUPACION_PACIENTE",
+    "REGIMEN": "REGIMEN",
+    "TIPO_PACIENTE": "TIPO_PACIENTE",
 
     # Ubicación
     "MUNICIPIO": "MUNICIPIO",
@@ -25,8 +28,10 @@ columnas_clave = {
 
     # Información clínica (CRÍTICO)
     "DIAGNOSTICO": "CIE10",
+    "DIAG_NOMBRE": "NOMBRE_DIAGNOSTICO",
     "TIP_DX": "TIPO_DIAGNOSTICO",
-    "HCCODIGO": "CODIGO_FOLIO"
+    "HCCODIGO": "CODIGO_FOLIO",
+    "INGRESO_PAC": "CODIGO_INGRESO"
 }
 
 
