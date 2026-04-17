@@ -12,7 +12,13 @@ ENV/
 __pycache__/
 *.py[cod]
 *$py.class
+/*.parquet
 cache/
+
+# =========================
+# ARCHIVOS DE SALIDA
+# =========================
+output/
 
 # =========================
 # EXTENSIONES COMPILADAS
