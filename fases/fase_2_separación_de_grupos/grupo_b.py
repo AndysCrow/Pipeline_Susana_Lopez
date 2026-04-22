@@ -83,12 +83,12 @@ def eliminar_duplicados(
             valor_original = fila["CODIGO_FOLIO"],
             valor_nuevo    = None,
             regla_aplicada = (
-                f"Duplicado en Grupo A ({etiqueta}): mismo ingreso "
+                f"Duplicado en Grupo B ({etiqueta}): mismo ingreso "
                 f"({fila['CODIGO_INGRESO']}), mismo diagnóstico "
                 f"({fila['CIE10']}), mismo proceso ({fila['CODIGO_FOLIO']}). "
                 f"Se conserva el último registro."
             ),
-            accion         = "eliminado",
+            accion         = "Eliminación",
             fase           = FASE,
         )
 
