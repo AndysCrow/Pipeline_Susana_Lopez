@@ -7,7 +7,7 @@ parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)
 sys.path.append(root_dir)
 
-import data.cargar_datos as data
+import Data.cargar_datos as data
 import trazabilidad.dataframe as dtframe
 
 
@@ -48,11 +48,11 @@ def depurar_columnas(df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[ p
         log.registrar(
             ingreso="N/A",
             campo=col,
-            valor_original="columna existente",
+            valor_original="Columna existente",
             valor_nuevo="ELIMINADO",
             regla_aplicada="Exclusión por no aportar al análisis epidemiológico",
             accion="Eliminación",
-            fase="Depuración de columnas"
+            fase="Fase 1 -Depuración de columnas"
         )
 
     df = df[columnas_validas].copy()

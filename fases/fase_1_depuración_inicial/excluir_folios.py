@@ -22,7 +22,7 @@ def exluir_folios (df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[pd.D
             valor_nuevo="ELIMINADO",
             regla_aplicada="Eliminación de folios con codigo HC064W",
             accion="Eliminación",
-            fase="Exclusión de folios clinicos HC064W"
+            fase="Fase 1 -Exclusión de folios clinicos HC064W"
         )
     
     df_nuevo = df.loc[df["CODIGO_FOLIO"] != "HC064W"]

@@ -88,7 +88,7 @@ def eliminar_duplicados(
                 f"({fila['CIE10']}), mismo proceso ({fila['CODIGO_FOLIO']}). "
                 f"Se conserva el último registro."
             ),
-            accion         = "eliminado",
+            accion         = "Eliminación",
             fase           = FASE,
         )
 

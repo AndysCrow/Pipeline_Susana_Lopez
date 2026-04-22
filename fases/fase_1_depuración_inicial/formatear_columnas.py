@@ -27,7 +27,7 @@ def formatear_fechas(df: pd.DataFrame, logs: trazabilidad.LogTrazabilidad) -> tu
             valor_nuevo=f"Tipo de dato: {df['FECHA_INGRESO'].dtype}",
             regla_aplicada="Formatear la fecha al tipo correcto",
             accion="Modificación",
-            fase="Formatear columna fecha"
+            fase="Fase 1 -Formatear columna fecha"
         )
     return df, logs
 
@@ -48,7 +48,7 @@ def formatear_edad(df: pd.DataFrame, logs: trazabilidad.LogTrazabilidad) -> tupl
             valor_nuevo=f"Tipo de dato: {df['EDAD'].dtype}",
             regla_aplicada="Formatear la edad al tipo correcto",
             accion="Modificación",
-            fase="Formatear columna edad"
+            fase="Fase 1 - Formatear columna edad"
         )
 
     return df, logs
