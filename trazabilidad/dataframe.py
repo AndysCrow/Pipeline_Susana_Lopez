@@ -43,6 +43,24 @@ class LogTrazabilidad:
             ignore_index=True
         )
 
+    def registrar_masivo(self, df_descartados: pd.DataFrame, regla_aplicada: str, accion: str, fase: str) -> None:
+
+        if df_descartados.empty:
+            return
+
+        nuevas_filas = pd.DataFrame({
+            "timestamp"     : datetime.now(),
+            "ingreso"       : df_descartados["CODIGO_INGRESO"].values,
+            "campo"         : "CODIGO_FOLIO",
+            "valor_original": df_descartados["CODIGO_FOLIO"].values,
+            "valor_nuevo"   : None,
+            "regla_aplicada": regla_aplicada,
+            "accion"        : accion,
+            "fase"          : fase,
+        })
+
+        self.df_log = pd.concat([self.df_log, nuevas_filas], ignore_index=True)
+
     def obtener(self):
         return self.df_log.copy()
 
@@ -57,3 +75,4 @@ class LogTrazabilidad:
         self.df_log.to_csv(ruta_salida, index=False, encoding="utf-8-sig")
         print(f"Log exportado en: {ruta_salida}")
         print(f"Total de registros en log: {len(self.df_log)}")
+

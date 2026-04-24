@@ -7,7 +7,7 @@ parent_dir = os.path.dirname(current_dir)
 root_dir = os.path.dirname(parent_dir)
 sys.path.append(root_dir)
 
-import Data.cargar_datos as data
+import data.cargar_datos as data
 import trazabilidad.dataframe as dtframe
 
 
@@ -27,6 +27,7 @@ columnas_clave = {
 
     # Tiempo epidemiológico
     "FECHA_INGRESO_AL_HSLV": "FECHA_INGRESO",
+    "FECHA_FOLIO": "FECHA_FOLIO",
     "MES_VERIFICADO_X_FECHA_INGRESO_AL_HSLV": "MES",
     "AÑO_VERIFICADO_X_FECHA_INGRESO_AL_HSLV": "AÑO",
 
@@ -35,7 +36,9 @@ columnas_clave = {
     "DIAG_NOMBRE": "NOMBRE_DIAGNOSTICO",
     "TIP_DX": "TIPO_DIAGNOSTICO",
     "HCCODIGO": "CODIGO_FOLIO",
-    "INGRESO_PAC": "CODIGO_INGRESO"
+    "INGRESO_PAC": "CODIGO_INGRESO",
+    "GASCODIGO": "CODIGO_AREA",
+    "GASNOMBRE": "AREA"
 }
 
 
