@@ -11,7 +11,7 @@ def eliminar_duplicados(
 ) -> tuple[pd.DataFrame, LogTrazabilidad]:
     """
     Dentro de un mismo folio, elimina registros donde la clave_duplicado
-    se repite más de una vez. Conserva el último por FECHA_INGRESO.
+    se repite más de una vez. Conserva el último por FECHA_FOLIO.
 
     Args:
         df:              DataFrame del folio a deduplicar.
@@ -21,7 +21,7 @@ def eliminar_duplicados(
         fase:            Nombre de la fase para el log.
     """
     df_ordenado = df.sort_values(
-        by=["FECHA_INGRESO", "CODIGO_INGRESO"],
+        by=["FECHA_FOLIO", "CODIGO_INGRESO"],
         ascending=[True, True],
         na_position="first"
     )
@@ -46,3 +46,37 @@ def eliminar_duplicados(
         )
 
     return df_ordenado[~filtro_duplicado], log
+
+
+def eliminar_duplicados_masivo(
+    df: pd.DataFrame,
+    log: LogTrazabilidad,
+    clave_duplicado: list[str],
+    etiqueta: str,
+    fase: str,
+) -> tuple[pd.DataFrame, LogTrazabilidad]:
+    """
+    Versión optimizada para DataFrames grandes (+50k filas).
+    Registra todos los descartados en una sola operación vectorizada.
+    """
+    df_ordenado = df.sort_values(
+        by=["FECHA_INGRESO", "CODIGO_INGRESO"],
+        ascending=[True, True],
+        na_position="first"
+    )
+
+    filtro_duplicado = df_ordenado.duplicated(subset=clave_duplicado, keep="last")
+    df_descartar     = df_ordenado[filtro_duplicado]
+    df_depurado      = df_ordenado[~filtro_duplicado]
+
+    log.registrar_masivo(
+        df_descartados = df_descartar,
+        regla_aplicada = (
+            f"Eliminación de duplicados ({etiqueta}): "
+            f"clave {clave_duplicado}. Se conserva el último registro."
+        ),
+        accion = "Eliminación",
+        fase   = fase,
+    )
+
+    return df_depurado, log
