@@ -3,17 +3,20 @@ import os
 import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(os.path.dirname(current_dir))
+root_dir    = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(root_dir)
 
 from trazabilidad.dataframe import LogTrazabilidad
+from fases.utils.duplicados    import eliminar_duplicados
+from fases.utils.reubicar      import reubicar
+from fases.utils.cruzar_folios import cruzar_folios
 
-FOLIOS_GRUPO_B = ["HC071W", "HC088W"]
-EDAD_PEDIATRICO = 18
-FASE = "Fase 2 - Grupo B"
-
-# Clave de duplicado: mismo ingreso + mismo diagnóstico + mismo proceso (folio)
-CLAVE_DUPLICADO = ["CODIGO_INGRESO", "CIE10", "CODIGO_FOLIO"]
+FOLIO_ADULTOS    = "HC088W"
+FOLIO_PEDIATRICO = "HC071W"
+FOLIOS_GRUPO_A   = [FOLIO_ADULTOS, FOLIO_PEDIATRICO]
+EDAD_PEDIATRICO  = 18
+FASE             = "Fase 2 - Grupo B"
+CLAVE_DUPLICADO  = ["CODIGO_INGRESO", "CIE10", "CODIGO_FOLIO"]
 
 
 def depurar_grupo_b(
@@ -22,75 +25,56 @@ def depurar_grupo_b(
 ) -> tuple[pd.DataFrame, LogTrazabilidad]:
 
     # 1. Filtrar folios del grupo A
-    filtro_folio = df["CODIGO_FOLIO"].isin(FOLIOS_GRUPO_B)
-    df_grupo = df[filtro_folio].copy()
+    df_grupo = df[df["CODIGO_FOLIO"].isin(FOLIOS_GRUPO_A)].copy()
 
-    # 2. Separar adultos y pediátricos
-    filtro_pediatrico = df_grupo["EDAD"] < EDAD_PEDIATRICO
-    df_adultos    = df_grupo[~filtro_pediatrico].copy()
-    df_pediatrico = df_grupo[filtro_pediatrico].copy()
+    # 2. Separar por folio
+    df_adultos    = df_grupo[df_grupo["CODIGO_FOLIO"] == FOLIO_ADULTOS].copy()
+    df_pediatrico = df_grupo[df_grupo["CODIGO_FOLIO"] == FOLIO_PEDIATRICO].copy()
 
-    # 3. Eliminar duplicados de cada subgrupo
-    df_adultos_dep,    log = eliminar_duplicados(
-        df_adultos,    log, etiqueta="adulto"
+    # 3. Eliminar duplicados dentro de cada folio
+    df_adultos,    log = eliminar_duplicados(df_adultos,    log, CLAVE_DUPLICADO, "adulto",     FASE)
+    df_pediatrico, log = eliminar_duplicados(df_pediatrico, log, CLAVE_DUPLICADO, "pediátrico", FASE)
+
+    # 4. Reubicar exclusivos mal ubicados por edad
+    df_adultos, df_pediatrico, log = reubicar(
+        df_origen     = df_adultos,
+        df_destino    = df_pediatrico,
+        condicion     = lambda edad: pd.notna(edad) and edad < EDAD_PEDIATRICO,
+        folio_origen  = FOLIO_ADULTOS,
+        folio_destino = FOLIO_PEDIATRICO,
+        motivo        = "Paciente pediátrico ubicado en folio de adultos",
+        fase          = FASE,
+        log           = log,
     )
-    df_pediatrico_dep, log = eliminar_duplicados(
-        df_pediatrico, log, etiqueta="pediátrico"
+    df_pediatrico, df_adultos, log = reubicar(
+        df_origen     = df_pediatrico,
+        df_destino    = df_adultos,
+        condicion     = lambda edad: pd.notna(edad) and edad >= EDAD_PEDIATRICO,
+        folio_origen  = FOLIO_PEDIATRICO,
+        folio_destino = FOLIO_ADULTOS,
+        motivo        = "Paciente adulto ubicado en folio pediátrico",
+        fase          = FASE,
+        log           = log,
     )
 
-    # 4. Reunificar
-    df_resultado = pd.concat(
-        [df_adultos_dep, df_pediatrico_dep], ignore_index=True
+    # 5. Resolver conflictos cruzados
+    df_adultos, df_pediatrico, log = cruzar_folios(
+        df_a       = df_adultos,
+        df_b       = df_pediatrico,
+        folio_a    = FOLIO_ADULTOS,
+        folio_b    = FOLIO_PEDIATRICO,
+        edad_corte = EDAD_PEDIATRICO,
+        fase       = FASE,
+        log        = log,
     )
+
+    # 6. Unificar
+    df_resultado = pd.concat([df_adultos, df_pediatrico], ignore_index=True)
 
     print(
-        f"[{FASE}] Registros entrada: {len(df_grupo)} | "
+        f"[{FASE}] Entrada: {len(df_grupo)} | "
         f"Eliminados: {len(df_grupo) - len(df_resultado)} | "
         f"Resultado: {len(df_resultado)}"
     )
 
     return df_resultado, log
-
-
-
-def eliminar_duplicados(
-    df: pd.DataFrame,
-    log: LogTrazabilidad,
-    etiqueta: str
-) -> tuple[pd.DataFrame, LogTrazabilidad]:
-    """
-    Elimina registros donde el mismo ingreso presenta el mismo diagnóstico
-    en el mismo proceso (folio) más de una vez. Conserva el último por
-    FECHA_INGRESO dentro de cada grupo duplicado.
-    """
-    df_ordenado = df.sort_values(
-        by=["CODIGO_INGRESO", "FECHA_INGRESO"],
-        ascending=[True, True],
-        na_position="first"
-    )
-
-    # Duplicado = misma combinación ingreso + diagnóstico + folio
-    filtro_duplicado = df_ordenado.duplicated(
-        subset=CLAVE_DUPLICADO, keep="last"
-    )
-    df_descartar = df_ordenado[filtro_duplicado]
-
-    # Registrar cada descarte en el log
-    for _, fila in df_descartar.iterrows():
-        log.registrar(
-            ingreso        = fila["CODIGO_INGRESO"],
-            campo          = "CODIGO_FOLIO",
-            valor_original = fila["CODIGO_FOLIO"],
-            valor_nuevo    = None,
-            regla_aplicada = (
-                f"Duplicado en Grupo B ({etiqueta}): mismo ingreso "
-                f"({fila['CODIGO_INGRESO']}), mismo diagnóstico "
-                f"({fila['CIE10']}), mismo proceso ({fila['CODIGO_FOLIO']}). "
-                f"Se conserva el último registro."
-            ),
-            accion         = "Eliminación",
-            fase           = FASE,
-        )
-
-    df_depurado = df_ordenado[~filtro_duplicado]
-    return df_depurado, log
