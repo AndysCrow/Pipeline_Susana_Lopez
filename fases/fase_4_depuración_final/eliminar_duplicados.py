@@ -10,7 +10,7 @@ from trazabilidad.dataframe import LogTrazabilidad
 from fases.utils.duplicados import eliminar_duplicados_masivo
 
 FASE = "Fase 4 - Depuración final"
-CLAVE_DUPLICADO = ["CODIGO_INGRESO", "CIE10", "CODIGO_FOLIO"]
+CLAVE_DUPLICADO = ["CODIGO_INGRESO", "CIE10", "CODIGO_FOLIO","FECHA_FOLIO","NOMBRE_DIAGNOSTICO" ]
 
 
 def depurar_df_inicial(
@@ -27,5 +27,5 @@ def depurar_df_inicial(
         f"Eliminados: {len(df_completo) - len(df_sin_duplicados)} | "
         f"Resultado: {len(df_sin_duplicados)}"
     )
-
+    print(f"[{FASE}] Entrada: {len(df_completo)} | Eliminados: {len(df_completo) - len(df_sin_duplicados)} | Resultado: {len(df_sin_duplicados)}")
     return df_sin_duplicados, log

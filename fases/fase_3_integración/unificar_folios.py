@@ -32,4 +32,6 @@ def unificar_folios(df_a: pd.DataFrame, df_b: pd.DataFrame, log: LogTrazabilidad
             fase="Fase 3 - Unificación de folios"
         )
 
+    print(f"[Fase 3 - Unificación folios] A: {len(df_a)} | B: {len(df_b)} | Total: {len(df_unificado)}")
+
     return df_unificado, log

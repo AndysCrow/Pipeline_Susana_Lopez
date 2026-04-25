@@ -6,7 +6,7 @@ _ruta_cargada = None
 
 
 
-def cargar_database(ruta_archivo: str, sheet_name: str = "Hoja1")-> pd.DataFrame:
+def cargar_database(ruta_archivo: str)-> pd.DataFrame:
         
     global _df_cache, _ruta_cargada
 
@@ -32,7 +32,7 @@ def cargar_database(ruta_archivo: str, sheet_name: str = "Hoja1")-> pd.DataFrame
         print(f"Leyendo archivo fuente: {ruta_archivo}")
         _df_cache = pd.read_excel(ruta_archivo,
                                   engine="pyxlsb",
-                                  sheet_name=sheet_name, dtype=str)
+                                  dtype=str)
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo Excel: {e}") from e
     

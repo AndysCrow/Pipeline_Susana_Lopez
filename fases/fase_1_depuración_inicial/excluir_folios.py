@@ -26,5 +26,6 @@ def exluir_folios (df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[pd.D
         )
     
     df_nuevo = df.loc[df["CODIGO_FOLIO"] != "HC064W"]
+    print(f"[Fase 1 - Exclusión folios] Inicial: {len(df)} | Eliminados HC064W: {len(df_excluidos)} | Resultado: {len(df_nuevo)}")
 
     return df_nuevo, log
