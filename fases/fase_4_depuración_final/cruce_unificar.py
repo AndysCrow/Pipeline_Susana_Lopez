@@ -28,4 +28,7 @@ def unificar_dataframe(
         fase="Fase 4 - Unificación de Dataframes"
 
     )
+
+    print(f"[Fase 4 - Unificación final] Base: {len(df_inicial)} | Depurado: {len(df_depurado)} | Total: {len(df_unificado)}")
     return df_unificado, log
+

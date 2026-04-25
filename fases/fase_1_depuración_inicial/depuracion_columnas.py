@@ -61,4 +61,6 @@ def depurar_columnas(df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[ p
     df = df[columnas_validas].copy()
     df = df.rename(columns=columnas_clave)
 
+    print(f"[Fase 1 - Depuración columnas] Inicial: {len(columnas_originales)} | Conservadas: {len(columnas_validas)} | Eliminadas: {len(columnas_eliminadas)}")
+
     return df, log

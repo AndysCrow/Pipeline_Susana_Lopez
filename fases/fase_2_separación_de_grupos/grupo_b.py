@@ -71,10 +71,6 @@ def depurar_grupo_b(
     # 6. Unificar
     df_resultado = pd.concat([df_adultos, df_pediatrico], ignore_index=True)
 
-    print(
-        f"[{FASE}] Entrada: {len(df_grupo)} | "
-        f"Eliminados: {len(df_grupo) - len(df_resultado)} | "
-        f"Resultado: {len(df_resultado)}"
-    )
+    print(f"[{FASE}] Entrada: {len(df_grupo)} | Eliminados: {len(df_grupo) - len(df_resultado)} | Resultado: {len(df_resultado)}")
 
     return df_resultado, log
