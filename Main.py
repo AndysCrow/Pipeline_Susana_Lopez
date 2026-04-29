@@ -14,6 +14,7 @@ def main(data: str, log: LogTrazabilidad):
     df_base, log = formatear_edad(df_base, log)
 
     # 3. Fase 2 - Procesamiento por grupos
+    
     df_a, log = depurar_grupo_a(df_base, log)
     df_b, log = depurar_grupo_b(df_base, log)
 

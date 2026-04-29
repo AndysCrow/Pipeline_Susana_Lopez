@@ -53,7 +53,7 @@ class LogTrazabilidad:
             "CODINGRESO"       : df_descartados["CODIGO_INGRESO"].values,
             "COLUMNA"         : "CODIGO_FOLIO",
             "VALORIGINAL": df_descartados["CODIGO_FOLIO"].values,
-            "VALNUEVO"   : None,
+            "VALNUEVO"   : "ELIMINADO",
             "REGAPLICADA": regla_aplicada,
              "ACCION"        : accion,
             "FASE"          : fase,
