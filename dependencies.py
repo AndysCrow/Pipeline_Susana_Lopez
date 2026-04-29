@@ -38,11 +38,6 @@ __all__ = [
     "unificar_folios",
 
     # Fase 4
-<<<<<<< HEAD
-    "depurar_df_inicial",
-    "unificar_dataframe"
-=======
     "unificar_dataframe",
     "depurar_df_inicial"
->>>>>>> main
 ]
