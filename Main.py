@@ -26,7 +26,9 @@ def main(data: str, log: LogTrazabilidad):
     ])].copy()
 
     # 6. Fase 4 - Unificación final
-    df_final, log = unificar_dataframe(df_base, df_grupos, log)
+    df_final, log = depurar_df_inicial(df_base,log)
+    df_final, log = unificar_dataframe(df_final, df_grupos, log)
+
 
     # 7. Exportación completa (datos + log en CSV y Excel)
     exportar_datos(df_final, log)
