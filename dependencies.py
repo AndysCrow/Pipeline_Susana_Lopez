@@ -13,6 +13,7 @@ from fases.fase_2_separación_de_grupos.grupo_b import depurar_grupo_b
 
 from fases.fase_3_integración.unificar_folios import unificar_folios
 
+from fases.fase_4_depuración_final.eliminar_duplicados import depurar_df_inicial
 from fases.fase_4_depuración_final.cruce_unificar import unificar_dataframe
 
 
@@ -35,5 +36,6 @@ __all__ = [
     "unificar_folios",
 
     # Fase 4
-    "unificar_dataframe",
+    "depurar_df_inicial",
+    "unificar_dataframe"
 ]

@@ -34,7 +34,7 @@ def eliminar_duplicados(
             ingreso        = fila["CODIGO_INGRESO"],
             campo          = "CODIGO_FOLIO",
             valor_original = fila["CODIGO_FOLIO"],
-            valor_nuevo    = None,
+            valor_nuevo    = "ELIMINADO",
             regla_aplicada = (
                 f"Duplicado ({etiqueta}): mismo ingreso "
                 f"({fila['CODIGO_INGRESO']}), mismo diagnóstico "
@@ -60,7 +60,7 @@ def eliminar_duplicados_masivo(
     Registra todos los descartados en una sola operación vectorizada.
     """
     df_ordenado = df.sort_values(
-        by=["FECHA_INGRESO", "CODIGO_INGRESO"],
+        by=["FECHA_FOLIO", "CODIGO_INGRESO"],
         ascending=[True, True],
         na_position="first"
     )
