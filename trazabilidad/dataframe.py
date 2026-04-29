@@ -6,14 +6,14 @@ import os
 class LogTrazabilidad:
     def __init__(self):
         self.columnas = [
-            "timestamp",
-            "ingreso",
-            "campo",
-            "valor_original",
-            "valor_nuevo",
-            "regla_aplicada",
-            "accion",
-            "fase"
+           "TIMESTAMP",
+            "CODINGRESO",
+            "COLUMNA",
+            "VALORIGINAL",
+            "VALNUEVO",
+            "REGAPLICADA",
+            "ACCION",
+            "FASE"
         ]
         self.df_log = pd.DataFrame(columns=self.columnas)
 
@@ -28,14 +28,14 @@ class LogTrazabilidad:
         fase
     ):
         nueva_fila = {
-            "timestamp": datetime.now(),
-            "ingreso": ingreso,
-            "campo": campo,
-            "valor_original": valor_original,
-            "valor_nuevo": valor_nuevo,
-            "regla_aplicada": regla_aplicada,
-            "accion": accion,
-            "fase": fase
+           "TIMESTAMP": datetime.now(),
+            "CODINGRESO": ingreso,
+            "COLUMNA": campo,
+            "VALORIGINAL": valor_original,
+            "VALNUEVO": valor_nuevo,
+            "REGAPLICADA": regla_aplicada,
+            "ACCION": accion,
+            "FASE": fase
         }
 
         self.df_log = pd.concat(
@@ -49,14 +49,14 @@ class LogTrazabilidad:
             return
 
         nuevas_filas = pd.DataFrame({
-            "timestamp"     : datetime.now(),
-            "ingreso"       : df_descartados["CODIGO_INGRESO"].values,
-            "campo"         : "CODIGO_FOLIO",
-            "valor_original": df_descartados["CODIGO_FOLIO"].values,
-            "valor_nuevo"   : None,
-            "regla_aplicada": regla_aplicada,
-            "accion"        : accion,
-            "fase"          : fase,
+           "TIMESTAMP"     : datetime.now(),
+            "CODINGRESO"       : df_descartados["CODIGO_INGRESO"].values,
+            "COLUMNA"         : "CODIGO_FOLIO",
+            "VALORIGINAL": df_descartados["CODIGO_FOLIO"].values,
+            "VALNUEVO"   : None,
+            "REGAPLICADA": regla_aplicada,
+             "ACCION"        : accion,
+            "FASE"          : fase,
         })
 
         self.df_log = pd.concat([self.df_log, nuevas_filas], ignore_index=True)
