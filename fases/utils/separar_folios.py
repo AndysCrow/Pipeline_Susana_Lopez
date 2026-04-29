@@ -1,4 +1,4 @@
-import pandas as pd
+""" import pandas as pd
 
 from trazabilidad.dataframe import LogTrazabilidad
 
@@ -28,4 +28,4 @@ def separar_folios(
         fase="Fase 2 - Separación de folios"
     )
 
-    return df_folios, df_restante, log
+    return df_folios, df_restante, log """

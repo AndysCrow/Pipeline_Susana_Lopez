@@ -26,10 +26,10 @@ def main(data: str, log: LogTrazabilidad):
         "HC003W", "HC023W", "HC071W", "HC088W"
     ])].copy()
 
-    # 6. Fase 4 - Depuracion y Unificación final
-    df_base_depurado, log = depurar_df_inicial(df_base, log)
+    # 6. Fase 4 - Unificación final
+    df_final, log = depurar_df_inicial(df_base,log)
+    df_final, log = unificar_dataframe(df_final, df_grupos, log)
 
-    df_final, log = unificar_dataframe(df_base_depurado, df_grupos, log)
 
     # 7. Exportación completa (datos + log en CSV y Excel)
     exportar_datos(df_final, log)
