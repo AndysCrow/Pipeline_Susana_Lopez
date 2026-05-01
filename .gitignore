@@ -89,3 +89,5 @@ htmlcov/
 ~$*.xlsb
 ~$*.xlsx
 ~$*.xls
+*.xlsx
+*.xlsb
