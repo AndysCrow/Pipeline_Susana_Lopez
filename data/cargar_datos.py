@@ -56,7 +56,7 @@ def limpiar_cache():
 
 
 def _ruta_cache(ruta_archivo: str):
-    carpeta = os.path.dirname(ruta_archivo) or "Data"
+    carpeta = os.path.dirname(ruta_archivo) or "data"
     nombre = os.path.splitext(os.path.basename(ruta_archivo))[0]
     return os.path.join(carpeta, "cache", f"{nombre}.parquet")
 
