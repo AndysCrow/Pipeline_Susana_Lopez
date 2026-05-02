@@ -11,36 +11,26 @@ def cruzar_folios(
     fase: str,
     log: LogTrazabilidad,
 ) -> tuple[pd.DataFrame, pd.DataFrame, LogTrazabilidad]:
-    """
-    Resuelve ingresos presentes en ambos folios simultáneamente.
-    La edad del paciente decide en cuál folio debe permanecer el registro.
-    Si la edad es nula, se conserva en el folio A por defecto.
 
-    Args:
-        df_a, df_b:  DataFrames de cada folio ya corregidos por edad.
-        folio_a:     Código del folio A (ej: 'HC003W').
-        folio_b:     Código del folio B (ej: 'HC023W').
-        edad_corte:  Umbral de edad que separa ambos grupos (ej: 18).
-        fase:        Nombre de la fase para el log.
-        log:         Instancia activa de LogTrazabilidad.
-    """
+    # Ingresos presentes en ambos folios simultáneamente
     conflictos = set(df_a["CODIGO_INGRESO"]) & set(df_b["CODIGO_INGRESO"])
 
-    if not conflictos:
-        return df_a, df_b, log
+    if not conflictos: # Si no hay conflictos, no hace nada
+        return df_a, df_b, log 
 
     eliminar_a = []
     eliminar_b = []
 
-    mapa_edades = df_a.set_index("CODIGO_INGRESO")["EDAD"]
+    mapa_edades = df_a.set_index("CODIGO_INGRESO")["EDAD"] # Maneja los ingresos por edad (Ej: Ingreso01: 25)
 
     for ingreso in conflictos:
-        edad = mapa_edades.loc[ingreso]
-        if isinstance(edad, pd.Series):
-            edad = edad.iloc[0]
 
-        if pd.isna(edad) or edad >= edad_corte:
-            eliminar_b.append(ingreso)
+        edad = mapa_edades.loc[ingreso] # Guarda la edad
+        if isinstance(edad, pd.Series): # Verifica si es un valor único o una lista de valores
+            edad = edad.iloc[0] # Toma el primer valor
+
+        if pd.isna(edad) or edad >= edad_corte: # Edad nula o mayor o igual al corte
+            eliminar_b.append(ingreso) # Agrega para eliminar del folio B
             folio_descartado = folio_b
             folio_conservado = folio_a
             motivo = (
@@ -49,7 +39,7 @@ def cruzar_folios(
                 "Edad nula: se conserva en grupo A por defecto"
             )
         else:
-            eliminar_a.append(ingreso)
+            eliminar_a.append(ingreso) # Agrega para eliminar del folio A
             folio_descartado = folio_a
             folio_conservado = folio_b
             motivo = f"Edad {edad} < {edad_corte}: corresponde a grupo B"
@@ -68,6 +58,7 @@ def cruzar_folios(
             fase   = fase,
         )
 
+    # Guarda solo los registros que no están en la lista de eliminados para cada folio
     df_a = df_a[~df_a["CODIGO_INGRESO"].isin(eliminar_a)]
     df_b = df_b[~df_b["CODIGO_INGRESO"].isin(eliminar_b)]
 
