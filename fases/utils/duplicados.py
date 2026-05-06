@@ -10,17 +10,20 @@ def eliminar_duplicados(
     fase: str,
 ) -> tuple[pd.DataFrame, LogTrazabilidad]:
 
+    # Mapea el dataframe por TIPO_DIAGNOSTICO a número, los NaN se les asigna el número 2
     df = df.copy()
     df["ORDEN_DIAGNOSTICO"] = df["TIPO_DIAGNOSTICO"].map(
         {"PRINCIPAL": 0, "SECUNDARIO": 1}
     ).fillna(2)
 
+    # Ordena el dataframe por tres criterios
     df_ordenado = df.sort_values(
-        by=["FECHA_INGRESO", "CODIGO_INGRESO", "ORDEN_DIAGNOSTICO"],
-        ascending=[True, True, False],
+        by=["FECHA_FOLIO", "CODIGO_INGRESO", "ORDEN_DIAGNOSTICO"],
+        ascending=[True, True, False], # Ordena ORDEN_DIAGNOSTICO de forma descendente para priorizar PRINCIPAL
         na_position="first"
     ).drop(columns=["ORDEN_DIAGNOSTICO"])
 
+    # Marca duplicados según la clave, conservando el último (más reciente) y descartando los anteriores
     filtro_duplicado = df_ordenado.duplicated(subset=clave_duplicado, keep="last")
     df_descartar     = df_ordenado[filtro_duplicado]
 
@@ -29,7 +32,7 @@ def eliminar_duplicados(
             ingreso        = fila["CODIGO_INGRESO"],
             campo          = "CODIGO_FOLIO",
             valor_original = fila["CODIGO_FOLIO"],
-            valor_nuevo    = None,
+            valor_nuevo    = "ELIMINADO",
             regla_aplicada = (
                 f"Duplicado ({etiqueta}): mismo ingreso "
                 f"({fila['CODIGO_INGRESO']}), mismo diagnóstico "
@@ -40,6 +43,7 @@ def eliminar_duplicados(
             fase   = fase,
         )
 
+    # Devuelve solo los registros que NO son duplicados
     return df_ordenado[~filtro_duplicado], log
 
 
@@ -47,7 +51,6 @@ def eliminar_duplicados_masivo(
     df: pd.DataFrame,
     log: LogTrazabilidad,
     clave_duplicado: list[str],
-    etiqueta: str,
     fase: str,
 ) -> tuple[pd.DataFrame, LogTrazabilidad]:
 
@@ -57,7 +60,7 @@ def eliminar_duplicados_masivo(
     ).fillna(2)
 
     df_ordenado = df.sort_values(
-        by=["FECHA_INGRESO", "CODIGO_INGRESO", "ORDEN_DIAGNOSTICO"],
+        by=["FECHA_FOLIO", "CODIGO_INGRESO", "ORDEN_DIAGNOSTICO"],
         ascending=[True, True, False],
         na_position="first"
     ).drop(columns=["ORDEN_DIAGNOSTICO"])
@@ -69,7 +72,7 @@ def eliminar_duplicados_masivo(
     log.registrar_masivo(
         df_descartados = df_descartar,
         regla_aplicada = (
-            f"Eliminación de duplicados ({etiqueta}): "
+            f"Eliminación de duplicados: "
             f"clave {clave_duplicado}. "
             f"Se conserva el registro más reciente con diagnóstico Principal."
         ),

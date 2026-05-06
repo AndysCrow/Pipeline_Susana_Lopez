@@ -19,7 +19,7 @@ def depurar_df_inicial(
 ) -> tuple[pd.DataFrame, LogTrazabilidad]:
 
     df_sin_duplicados, log = eliminar_duplicados_masivo(
-        df_completo, log, CLAVE_DUPLICADO, "", FASE
+        df_completo, log, CLAVE_DUPLICADO, FASE
     )
 
     print(

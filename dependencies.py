@@ -2,7 +2,7 @@ from data.cargar_datos import cargar_database
 from data.exportar_datos import exportar_datos
 
 from fases.fase_1_depuración_inicial.depuracion_columnas import depurar_columnas
-from fases.fase_1_depuración_inicial.excluir_folios import exluir_folios
+from fases.fase_1_depuración_inicial.excluir_folios import excluir_folios
 from fases.fase_1_depuración_inicial.formatear_columnas import (
     formatear_fechas,
     formatear_edad
@@ -26,7 +26,7 @@ __all__ = [
 
     # Fase 1
     "depurar_columnas",
-    "exluir_folios",
+    "excluir_folios",
     "formatear_fechas",
     "formatear_edad",
 

@@ -10,7 +10,7 @@ sys.path.append(root_dir)
 import trazabilidad.dataframe as dtframe
 
 
-def exluir_folios (df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[pd.DataFrame, dtframe.LogTrazabilidad]:
+def excluir_folios (df: pd.DataFrame, log: dtframe.LogTrazabilidad) -> tuple[pd.DataFrame, dtframe.LogTrazabilidad]:
 
     df_excluidos = df.loc[df["CODIGO_FOLIO"] == "HC064W"]
 
