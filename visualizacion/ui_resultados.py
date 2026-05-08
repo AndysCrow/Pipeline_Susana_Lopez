@@ -38,14 +38,21 @@ def mostrar_resultados() -> None:
             f"Total de registros en trazabilidad: {len(st.session_state['trace_df'])}"
         )
 
+    # ── Descargas ──────────────────────────────────────────────────────────────
     if "generated_files" in st.session_state:
         st.subheader("Archivos generados")
 
-        archivos = st.session_state["generated_files"]
+        archivos: dict[str, bytes] = st.session_state["generated_files"]
 
         if not archivos:
             st.info("No se detectaron archivos generados.")
             return
 
-        for archivo in archivos:
-            st.write(f"`{archivo}`")
+        for nombre, contenido in archivos.items():
+            st.download_button(
+                label=f"⬇ Descargar {nombre}",
+                data=contenido,
+                file_name=nombre,
+                mime="text/csv",
+                key=nombre,  # evita conflictos si hay múltiples botones
+            )
