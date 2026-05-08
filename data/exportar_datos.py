@@ -1,5 +1,5 @@
 import pandas as pd
-import os
+import io
 from datetime import datetime
 from trazabilidad.dataframe import LogTrazabilidad
 
@@ -7,30 +7,28 @@ from trazabilidad.dataframe import LogTrazabilidad
 def exportar_datos(
     df_final: pd.DataFrame,
     log: LogTrazabilidad,
-    ruta_salida: str = "data/output"
-) -> None:
+) -> dict[str, bytes]:
+    """
+    Serializa los resultados en memoria como CSV y los retorna como bytes.
+    No escribe nada a disco; la descarga la maneja la UI.
+    """
 
-    # 1. Crear carpeta si no existe
-    os.makedirs(ruta_salida, exist_ok=True)
-
-    # 2. Timestamp para versionado
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    # 3. Rutas
-    ruta_excel_datos = os.path.join(ruta_salida, f"datos_limpios_{timestamp}.xlsx")
-    ruta_excel_log   = os.path.join(ruta_salida, f"trazabilidad_{timestamp}.xlsx")
-    ruta_csv_log     = os.path.join(ruta_salida, f"trazabilidad_{timestamp}.csv")
+    # CSV datos limpios
+    buf_datos = io.StringIO()
+    df_final.to_csv(buf_datos, index=False)
+    bytes_datos = buf_datos.getvalue().encode("utf-8")
 
-    # 4. Exportar DataFrame limpio
-    df_final.to_excel(ruta_excel_datos, index=False)
+    # CSV trazabilidad
+    buf_log = io.StringIO()
+    log.obtener().to_csv(buf_log, index=False)
+    bytes_log = buf_log.getvalue().encode("utf-8")
 
-    # 5. Exportar log en CSV (usando tu método)
-    log.exportar(ruta_csv_log)
+    print(f"✔ Datos limpios listos en memoria ({len(df_final)} registros)")
+    print(f"✔ Trazabilidad lista en memoria ({len(log.obtener())} registros)")
 
-    # 6. Exportar log también en Excel (desde memoria, no desde CSV)
-    df_log = log.obtener()
-    df_log.to_excel(ruta_excel_log, index=False)
-
-    print(f"✔ Datos limpios: {ruta_excel_datos}")
-    print(f"✔ Log CSV: {ruta_csv_log}")
-    print(f"✔ Log Excel: {ruta_excel_log}")
+    return {
+        f"datos_limpios_{timestamp}.csv": bytes_datos,
+        f"trazabilidad_{timestamp}.csv": bytes_log,
+    }
