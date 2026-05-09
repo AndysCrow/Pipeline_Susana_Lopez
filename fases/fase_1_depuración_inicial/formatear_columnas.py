@@ -10,29 +10,6 @@ sys.path.append(root_dir)
 
 import trazabilidad.dataframe as trazabilidad
 
-def formatear_fechas(df: pd.DataFrame, logs: trazabilidad.LogTrazabilidad) -> tuple[pd.DataFrame, trazabilidad.LogTrazabilidad]:
-    # Cambiar tipo de fecha principal.
-    tipo_original_fecha = df["FECHA_FOLIO"].dtype
-
-    if not pd.api.types.is_datetime64_any_dtype(df["FECHA_FOLIO"]):
-        
-        df["FECHA_FOLIO"] = pd.to_datetime(
-            df["FECHA_FOLIO"], errors="coerce"
-        )
-
-        logs.registrar(
-            ingreso="N/A",
-            campo="FECHA_FOLIO",
-            valor_original=f"Tipo de dato: {tipo_original_fecha}",
-            valor_nuevo=f"Tipo de dato: {df['FECHA_FOLIO'].dtype}",
-            regla_aplicada="Formatear la fecha al tipo correcto",
-            accion="Modificación",
-            fase="Fase 1 -Formatear columna fecha"
-            
-        )
-        print(f"[Fase 1 - Formatear fechas] {tipo_original_fecha} → {df['FECHA_FOLIO'].dtype}")
-    return df, logs
-
 
 def formatear_edad(df: pd.DataFrame, logs: trazabilidad.LogTrazabilidad) -> tuple[pd.DataFrame, trazabilidad.LogTrazabilidad]:
 

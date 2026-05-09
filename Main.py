@@ -10,7 +10,6 @@ def main(data: str, log: LogTrazabilidad):
     # 2. Fase 1 - Limpieza base
     df_base, log = depurar_columnas(df_base, log)
     df_base, log = excluir_folios(df_base, log)
-    df_base, log = formatear_fechas(df_base, log)
     df_base, log = formatear_edad(df_base, log)
 
     # 3. Fase 2 - Procesamiento por grupos

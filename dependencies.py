@@ -4,7 +4,6 @@ from data.exportar_datos import exportar_datos
 from fases.fase_1_depuración_inicial.depuracion_columnas import depurar_columnas
 from fases.fase_1_depuración_inicial.excluir_folios import excluir_folios
 from fases.fase_1_depuración_inicial.formatear_columnas import (
-    formatear_fechas,
     formatear_edad
 )
 
@@ -27,7 +26,6 @@ __all__ = [
     # Fase 1
     "depurar_columnas",
     "excluir_folios",
-    "formatear_fechas",
     "formatear_edad",
 
     # Fase 2
