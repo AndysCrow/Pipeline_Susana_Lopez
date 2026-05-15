@@ -25,38 +25,55 @@ def cruzar_folios(
 
     for ingreso in conflictos:
 
-        edad = mapa_edades.loc[ingreso] # Guarda la edad
-        if isinstance(edad, pd.Series): # Verifica si es un valor único o una lista de valores
-            edad = edad.iloc[0] # Toma el primer valor
+        edad = mapa_edades.loc[ingreso]
 
-        if pd.isna(edad) or edad >= edad_corte: # Edad nula o mayor o igual al corte
-            eliminar_b.append(ingreso) # Agrega para eliminar del folio B
+        if isinstance(edad, pd.Series):
+            edad = edad.iloc[0]
+
+        if pd.isna(edad) or edad >= edad_corte:
+
+            filas_eliminar = df_b[df_b["CODIGO_INGRESO"] == ingreso]
+
+            eliminar_b.append(ingreso)
+
             folio_descartado = folio_b
             folio_conservado = folio_a
+
             motivo = (
                 f"Edad {edad} >= {edad_corte}: corresponde a grupo A"
                 if pd.notna(edad) else
                 "Edad nula: se conserva en grupo A por defecto"
             )
+
         else:
-            eliminar_a.append(ingreso) # Agrega para eliminar del folio A
+
+            filas_eliminar = df_a[df_a["CODIGO_INGRESO"] == ingreso]
+
+            eliminar_a.append(ingreso)
+
             folio_descartado = folio_a
             folio_conservado = folio_b
+
             motivo = f"Edad {edad} < {edad_corte}: corresponde a grupo B"
 
-        log.registrar(
-            ingreso        = ingreso,
-            campo          = "CODIGO_FOLIO",
-            valor_original = folio_descartado,
-            valor_nuevo    = folio_conservado,
-            regla_aplicada = (
-                f"Conflicto cruzado {folio_a}/{folio_b}: ingreso ({ingreso}) "
-                f"presente en ambos folios. {motivo}. "
-                f"Se elimina de {folio_descartado}, se conserva en {folio_conservado}."
-            ),
-            accion = "Eliminación",
-            fase   = fase,
-        )
+        for _, fila in filas_eliminar.iterrows():
+
+            log.registrar(
+                ingreso        = fila["CODIGO_INGRESO"],
+                campo          = "CODIGO_FOLIO",
+                valor_original = fila["CODIGO_FOLIO"],
+                valor_nuevo    = folio_conservado,
+                regla_aplicada = (
+                    f"Conflicto cruzado {folio_a}/{folio_b}: "
+                    f"ingreso ({fila['CODIGO_INGRESO']}), "
+                    f"diagnóstico ({fila['CIE10']}). "
+                    f"{motivo}. "
+                    f"Se elimina de {folio_descartado}, "
+                    f"se conserva en {folio_conservado}."
+                ),
+                accion = "Eliminación",
+                fase   = fase,
+            )
 
     # Guarda solo los registros que no están en la lista de eliminados para cada folio
     df_a = df_a[~df_a["CODIGO_INGRESO"].isin(eliminar_a)]

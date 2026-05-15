@@ -6,10 +6,12 @@ def main(data: str, log: LogTrazabilidad):
 
     # 1. Carga
     df_base = cargar_database(data)
-
+    df_original = df_base.copy() 
     # 2. Fase 1 - Limpieza base
     df_base, log = depurar_columnas(df_base, log)
     df_base, log = excluir_folios(df_base, log)
+
+    #df_base, log = formatear_fechas(df_base, log)
     df_base, log = formatear_edad(df_base, log)
 
     # 3. Fase 2 - Procesamiento por grupos
@@ -33,6 +35,8 @@ def main(data: str, log: LogTrazabilidad):
 
     # 7. Exportación completa (datos + log en CSV y Excel)
     exportar_datos(df_final, log)
+    rv = ejecutar_validaciones(df_original, df_final, log)
+    resumen_validacion = rv.resumen()
 
     return df_final, log
 

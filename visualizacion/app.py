@@ -233,7 +233,7 @@ hr {
 # ──────────────────────────────────────────────────────────────────────────────
 st.markdown('<div class="header-container">', unsafe_allow_html=True)
 
-col_logo, col_titulo, col_info = st.columns([2, 4, 2])
+col_logo, col_titulo, col_info = st.columns([2, 3, 2])
 
 # ── LOGO ─────────────────────────────────────────────────────────────────────
 with col_logo:

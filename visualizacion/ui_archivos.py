@@ -34,4 +34,6 @@ def cargar_archivo() -> str | None:
     except Exception as error:
         st.warning(f"No se pudo mostrar la vista previa: {error}")
 
+
+
     return ruta

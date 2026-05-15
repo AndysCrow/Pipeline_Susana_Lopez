@@ -16,6 +16,7 @@ from fases.fase_4_depuración_final.eliminar_duplicados import depurar_df_inicia
 from fases.fase_4_depuración_final.cruce_unificar import unificar_dataframe
 
 from fases.fase_4_depuración_final.eliminar_duplicados import depurar_df_inicial
+from validacion.validaciones import ejecutar_validaciones
 
 
 __all__ = [
@@ -37,5 +38,8 @@ __all__ = [
 
     # Fase 4
     "unificar_dataframe",
-    "depurar_df_inicial"
+    "depurar_df_inicial",
+
+    # Validación
+    "ejecutar_validaciones"
 ]
