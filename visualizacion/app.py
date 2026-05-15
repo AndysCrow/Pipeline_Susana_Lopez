@@ -282,7 +282,7 @@ with col_info:
 # ──────────────────────────────────────────────────────────────────────────────
 # MAIN
 # ──────────────────────────────────────────────────────────────────────────────
-col_izq, col_der = st.columns([1, 1.8], gap="large")
+col_izq, col_der, col_val = st.columns([1, 1.8, 1.2], gap="large")
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -306,8 +306,6 @@ with col_izq:
 
     if ruta_archivo is not None:
 
-        st.success("Archivo cargado correctamente.")
-
         log = LogTrazabilidad()
 
         st.markdown("<br>", unsafe_allow_html=True)
@@ -321,7 +319,6 @@ with col_izq:
         """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
-        
 
         if st.button(
             "▶ Procesar archivo",
@@ -334,7 +331,7 @@ with col_izq:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# PANEL DERECHO
+# PANEL CENTRAL — RESULTADOS
 # ──────────────────────────────────────────────────────────────────────────────
 with col_der:
 
@@ -351,6 +348,53 @@ with col_der:
     st.markdown("<br>", unsafe_allow_html=True)
 
     mostrar_resultados()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PANEL DERECHO — VALIDACIONES
+# ──────────────────────────────────────────────────────────────────────────────
+with col_val:
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🔍 Validaciones")
+
+    st.markdown("""
+    <span style="color:#6B7280; font-size:14px;">
+    Resultados de las validaciones aplicadas al proceso de limpieza.
+    </span>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    if "validation_df" in st.session_state and st.session_state["validation_df"] is not None:
+        vdf = st.session_state["validation_df"]
+        todo_ok = st.session_state.get("validation_ok", False)
+
+        aprobadas = (vdf["estado"].str.contains("APROBADO")).sum()
+        total = len(vdf)
+
+        col_a, col_b = st.columns(2)
+        col_a.metric("✅ Aprobadas", aprobadas)
+        col_b.metric("❌ Fallidas", total - aprobadas)
+
+        if todo_ok:
+            st.success("Todas las validaciones aprobadas.")
+        else:
+            st.warning("Una o más validaciones fallaron.")
+
+        def colorear_fila(row):
+            color = "#D1FAE5" if "APROBADO" in row["estado"] else "#FEE2E2"
+            return [f"background-color: {color}"] * len(row)
+
+        st.dataframe(
+            vdf.style.apply(colorear_fila, axis=1),
+            use_container_width=True,
+            hide_index=True
+        )
+    else:
+        st.info("Las validaciones aparecerán aquí tras ejecutar el pipeline.")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
